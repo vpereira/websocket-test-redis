@@ -1,0 +1,16 @@
+version: "3"
+services:
+    webapp:
+        image: golang:1.14.6-buster
+        ports:
+            - '3000:3000'
+        volumes:
+            - ./:/websocket-test-redis
+        working_dir: /websocket-test-redis
+        command: bash -c 'cd /websocket-test-redis && go run *.go'
+        depends_on: 
+            - redis
+    redis:
+        image: redis
+        ports:
+            - '6379:6379'

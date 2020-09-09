@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+</head>
+<body>
+<table class="table table-striped">
+<thead>
+<tr><th scope="col">ID</th><th scope="col">Status</th></tr>
+</thead>
+<tbody>
+{{range $key, $value := .Jobs}}
+<tr>
+    <td>{{$key}} </td>
+    <td>{{$value}}</td>
+</tr>
+{{end}}
+</tbody>
+</table>
+<script>
+const wsClient = new WebSocket("ws://localhost:3000/ws");
+ const update = () => {
+     wsClient.onmessage = ({data}) => {
+         const jsonData = JSON.parse(data);
+         const oTableBody = document.querySelector('.table tbody');
+         for(let i = 0; i < oTableBody.rows.length; i++) {
+             const oCells = oTableBody.rows.item(i).cells;
+             const jobID = oCells.item(0).innerText;
+             if(jobID == jsonData.id) {
+                 oCells.item(1).innerText = jsonData.status
+             }          
+         }
+     }
+ };
+ window.setTimeout(update); 
+</script>
+</body>
+</html>
